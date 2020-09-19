@@ -9,7 +9,7 @@ app.use(bodyParser())
 app.use(tasks.routes())
 
 mongoose.connect(
-  'mongodb+srv://chat:123@testclusterchat.oqqxt.azure.mongodb.net/test-db?retryWrites=true&w=majority',
+  'mongodb+srv://chat-admin:123123123@testclusterchat.oqqxt.azure.mongodb.net/test-db?retryWrites=true&w=majority',
   { useNewUrlParser: true, useUnifiedTopology: true }
 )
 
