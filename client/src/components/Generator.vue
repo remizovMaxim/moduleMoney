@@ -2,29 +2,28 @@
   <div class="hello">
     <div class="row">
       <div class="col-8 col-md-6 mx-auto">
+        <h1 class="text-center">Генератор кода</h1>
         <table class="table">
-          <tr v-for="todo in todos" v-bind:key="todo._id" v-bind:task_name="todo.task_name">
-            <td class="text-left">{{ todo.task_name }}</td>
+          <tr v-bind:key="oneCode._id" v-bind:task_name="oneCode.task_name">
+            <td class="text-left">{{ oneCode.task_name }}</td>
             <td class="text-right">
-              <button v-on:click="deleteTask(todo._id)" class="btn btn-danger">Delete</button>
+              <button v-on:click="deleteTask(oneCode._id)" class="btn btn-danger">Delete</button>
             </td>
           </tr>
         </table>
-        <h1 class="text-center">Генератор кода</h1>
-        <i>{{ myCode }}</i>
         <form v-on:submit.prevent="addNewTask" v-if="this.isEdit == false">
           <button type="submit" class="btn btn-success btn-block mt-3">Сгенерировать код</button>
         </form>
-        <form v-on:submit.prevent="updateTask" v-else>
-          <label for="tasknameinput">Enter your code</label>
-          <input
-            v-model="taskname"
-            id="tasknameinput"
-            class="form-control"
-            placeholder="Enter your code"
-          />
-          <button type="submit" class="btn btn-success btn-block mt-3">Отправить</button>
-        </form>
+<!--        <form v-on:submit.prevent="updateTask" v-else>-->
+<!--          <label for="tasknameinput">Enter your code</label>-->
+<!--          <input-->
+<!--            v-model="taskname"-->
+<!--            id="tasknameinput"-->
+<!--            class="form-control"-->
+<!--            placeholder="Enter your code"-->
+<!--          />-->
+<!--          <button type="submit" class="btn btn-success btn-block mt-3">Отправить</button>-->
+<!--        </form>-->
       </div>
     </div>
   </div>
@@ -37,7 +36,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      todos: [],
+      oneCode: {},
       id: "",
       taskname: "",
       isEdit: false,
@@ -45,19 +44,17 @@ export default {
     };
   },
   mounted() {
-    console.log('hello world!');
     this.getTasks();
   },
   methods: {
     getTasks() {
-      axios({method: "GET", url: "/api/tasks"}).then(
+      axios({method: "GET", url: "/api/one"}).then(
         (result) => {
-          console.log(result);
-          this.todos = result.data.obj1;
+          console.log('MongoDB: ', result.data[0].task_name);
+          this.oneCode = result.data[0];
         },
         (error) => {
           console.error(error);
-          console.log('hello world!');
         }
       );
     },
@@ -66,7 +63,7 @@ export default {
         .post("/api/task", {})
         .then((res) => {
           this.getTasks();
-          this.isEdit = true;
+          // this.isEdit = true;
           this.myCode = "";
         })
         .catch((err) => {

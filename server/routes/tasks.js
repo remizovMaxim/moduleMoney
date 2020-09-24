@@ -4,61 +4,73 @@ const Task = require('../models/Task')
 const str_rand = require('../generator/generatorApi')
 
 router.get('/api/tasks', async ctx => {
-  await Task.find()
-    .then(tasks => {
-      const kek = {
-        obj1: tasks,
-      }
-      ctx.body = kek
-    })
-    .catch(err => {
-      ctx.body = 'error: ' + err
-    })
+    await Task.find()
+        .then(tasks => {
+            const kek = {
+                obj1: tasks,
+            }
+            ctx.body = kek
+        })
+        .catch(err => {
+            ctx.body = 'error: ' + err
+        })
+})
+
+router.get('/api/one', async ctx => {
+    await Task.find()
+        .sort({$natural: - 1})
+        .limit(1)
+        .then(codeDb => {
+            ctx.body = codeDb
+        })
+        .catch(err => {
+            ctx.body = 'error: ' + err
+        })
 })
 
 router.post('/api/task', async ctx => {
-  var task = new Task()
-  task.task_name = str_rand()
-  await task
-    .save()
-    .then(async data => {
-      ctx.body = data
-    })
-    .catch(err => {
-      ctx.body = 'error: ' + err
-    })  
+    var task = new Task()
+    task.task_name = str_rand()
+    await task
+        .save()
+        .then(async data => {
+            ctx.body = data
+        })
+        .catch(err => {
+            ctx.body = 'error: ' + err
+        })
 })
 
 router.delete('/api/task/:id', async ctx => {
-  await Task.deleteOne({
-    _id: ctx.params.id
-  })
-    .then(() => {
-      ctx.body = { status: 'Task Deleted!' }
+    await Task.deleteOne({
+        _id: ctx.params.id
     })
-    .catch(err => {
-      ctx.body = 'error: ' + err
-    })
+        .then(() => {
+            ctx.body = {status: 'Task Deleted!'}
+        })
+        .catch(err => {
+            ctx.body = 'error: ' + err
+        })
 })
 
 router.put('/api/task/', async ctx => {
-  if (!ctx.request.body.task_name) {    
-    const kek = {
-      obj1: [{ error: 'Bad Data' }],
-    }
-    ctx.body = kek
-  } else {
+    if (!ctx.request.body.task_name) {
+        const kek = {
+            obj1: [{error: 'Bad Data'}],
+        }
+        ctx.body = kek
+    } else {
 
-    await Task.find(
-      { task_name: ctx.request.body.task_name }
-    )
-      .then((data) => {        
-        ctx.body = data;
-      })
-      .catch(err => {        
-        ctx.body = 'error: ' + err
-      })    
-  }
+        await Task.find(
+            {task_name: ctx.request.body.task_name}
+        )
+            .then((data) => {
+                ctx.body = data;
+            })
+            .catch(err => {
+                ctx.body = 'error: ' + err
+            })
+    }
 })
 
 module.exports = router
