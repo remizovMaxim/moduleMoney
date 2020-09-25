@@ -1,5 +1,11 @@
 <template>
-  <div class="hello">
+  <div class="hello container">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="text-center">Список сгенерированных кодов</h1>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-8 col-md-6 mx-auto">
         <table class="table">
@@ -10,18 +16,6 @@
             </td>
           </tr>
         </table>
-        <h1 class="text-center">Генератор кода</h1>
-        <i>{{ myCode }}</i>
-        <form v-on:submit.prevent="updateTask">
-          <label for="tasknameinput">Enter your code</label>
-          <input
-            v-model="taskname"
-            id="tasknameinput"
-            class="form-control"
-            placeholder="Enter your code"
-          />
-          <button type="submit" class="btn btn-success btn-block mt-3">Отправить</button>
-        </form>
       </div>
     </div>
   </div>

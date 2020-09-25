@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="hello container">
     <div class="row">
       <div class="col-8 col-md-6 mx-auto">
         <h1 class="text-center">Генератор кода</h1>
