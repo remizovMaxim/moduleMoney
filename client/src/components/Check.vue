@@ -3,11 +3,12 @@
     <div class="row">
       <div class="col-8 col-md-6 mx-auto">
         <h1 class="text-center">Проверить код</h1>
-        <i>{{ myCode }}</i>
+        <i>{{ myMessage }}</i>
         <form v-on:submit.prevent="updateTask">
           <label for="tasknameinput">Enter your code</label>
           <input
-            v-model="taskname"
+            :value="inputText"
+            @input="updateInputText"
             id="tasknameinput"
             class="form-control"
             placeholder="Enter your code"
@@ -22,28 +23,26 @@
 
 <script>
 import axios from "axios";
+import {mapState} from "vuex";
 
 export default {
   data() {
     return {
-      todos: [],
-      id: "",
-      taskname: "",
-      isEdit: false,
-      myCode: "",
+      myMessage: "",
     };
   },
-  mounted() {
+  computed: {
+    ...mapState({
+      inputText: state => state.inputText
+    })
   },
   methods: {
     updateTask() {
       axios
-        .put(`/api/task/`, {task_name: this.taskname})
+        .put(`/api/task/`, {task_name: this.$store.state.inputText})
         .then((res) => {
           const finResult = mess => {
-            this.taskname = "";
-            this.isEdit = false;
-            this.myCode = mess;
+            this.myMessage = mess;
           }
           if (res.data.length === 1) {
             finResult("Great!");
@@ -53,8 +52,14 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          this.$store.commit('updateInputText', '')
         });
     },
+    updateInputText(e) {
+      this.$store.commit('updateInputText', e.target.value)
+    }
   },
 };
 </script>
