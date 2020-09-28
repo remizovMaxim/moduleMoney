@@ -5,11 +5,19 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    inputText: ''
+    inputText: '',
+    arrayCodes: [
+      {
+        task_name: 'Загрузка'
+      }
+    ]
   },
   mutations: {
-    updateInputText: function(state, code){
+    updateInputText(state, code) {
       state.inputText = code
+    },
+    updateArrayCodes(state, arrayCodes){
+      state.arrayCodes = arrayCodes
     }
   }
 })

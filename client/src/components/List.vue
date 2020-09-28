@@ -9,10 +9,10 @@
     <div class="row">
       <div class="col-8 col-md-6 mx-auto">
         <table class="table">
-          <tr v-for="todo in todos" v-bind:key="todo._id" v-bind:task_name="todo.task_name">
-            <td class="text-left">{{ todo.task_name }}</td>
+          <tr v-for="code in arrayCodes" v-bind:key="code._id" v-bind:task_name="code.task_name">
+            <td class="text-left">{{ code.task_name }}</td>
             <td class="text-right">
-              <button v-on:click="deleteTask(todo._id)" class="btn btn-danger">Delete</button>
+              <button v-on:click="deleteTask(code._id)" class="btn btn-danger">Delete</button>
             </td>
           </tr>
         </table>
@@ -24,42 +24,35 @@
 
 <script>
 import axios from "axios";
+import {mapState} from "vuex";
 
 export default {
-  data() {
-    return {
-      todos: [],
-      id: "",
-      taskname: "",
-      isEdit: false,
-      myCode: "",
-    };
-  },
   mounted() {
     this.getTasks();
   },
+  computed: {
+    ...mapState({
+      arrayCodes: state => state.arrayCodes
+    })
+  },
   methods: {
     getTasks() {
-      axios({method: "GET", url: "/api/tasks"}).then(
-        (result) => {
-          console.log(result);
-          this.todos = result.data.obj1;
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
+      axios.get("/api/tasks")
+        .then((result) => {
+          this.$store.commit('updateArrayCodes', result.data.obj1);
+        })
+        .catch((err) => {
+          console.error(err)
+        });
     },
     deleteTask(id) {
       axios
         .delete(`/api/task/${id}`)
         .then((res) => {
-          this.taskname = "";
           this.getTasks();
-          console.log(res);
         })
         .catch((err) => {
-          console.log(err);
+          console.log('Oops...! ERROR:', err);
         });
     },
   },

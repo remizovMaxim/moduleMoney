@@ -11,19 +11,9 @@
             </td>
           </tr>
         </table>
-        <form v-on:submit.prevent="addNewTask" v-if="this.isEdit == false">
+        <form v-on:submit.prevent="addNewTask">
           <button type="submit" class="btn btn-success btn-block mt-3">Сгенерировать код</button>
         </form>
-<!--        <form v-on:submit.prevent="updateTask" v-else>-->
-<!--          <label for="tasknameinput">Enter your code</label>-->
-<!--          <input-->
-<!--            v-model="taskname"-->
-<!--            id="tasknameinput"-->
-<!--            class="form-control"-->
-<!--            placeholder="Enter your code"-->
-<!--          />-->
-<!--          <button type="submit" class="btn btn-success btn-block mt-3">Отправить</button>-->
-<!--        </form>-->
       </div>
     </div>
   </div>
@@ -32,38 +22,41 @@
 
 <script>
 import axios from "axios";
+import {mapState} from "vuex";
 
 export default {
   data() {
     return {
       oneCode: {},
-      id: "",
-      taskname: "",
-      isEdit: false,
       myCode: "",
     };
   },
   mounted() {
     this.getTasks();
   },
+  computed: {
+    ...mapState({
+      arrayCodes: state => state.arrayCodes
+    })
+  },
   methods: {
     getTasks() {
-      axios({method: "GET", url: "/api/one"}).then(
-        (result) => {
-          console.log('MongoDB: ', result.data[0].task_name);
-          this.oneCode = result.data[0];
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
+      axios.get("/api/tasks")
+        .then((result) => {
+          this.$store.commit('updateArrayCodes', result.data.obj1);
+        })
+        .then(() => {
+          this.oneCode = this.arrayCodes.slice(-1)[0]
+        })
+        .catch((err) => {
+          console.error(err)
+        });
     },
     addNewTask() {
       axios
         .post("/api/task", {})
         .then((res) => {
           this.getTasks();
-          // this.isEdit = true;
           this.myCode = "";
         })
         .catch((err) => {
