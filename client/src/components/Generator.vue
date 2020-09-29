@@ -5,7 +5,7 @@
         <h1 class="text-center">Генератор кода</h1>
         <table class="table">
           <tr v-bind:key="oneCode._id" v-bind:task_name="oneCode.task_name">
-            <td class="text-left">{{ oneCode.task_name }}</td>
+            <td class="text-left" title="your code">{{ oneCode.task_name }}</td>
             <td class="text-right">
               <button v-on:click="deleteTask(oneCode._id)" class="btn btn-danger">Delete</button>
             </td>
